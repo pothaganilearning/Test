@@ -3,40 +3,42 @@ const monthNames = [
     "July", "August", "September", "October", "November", "December"
 ];
 
-let holidays = [];
-let stockData = {};
+// Define holidays
+const holidays = [
+    '22-Jan-2024', '26-Jan-2024', '08-Mar-2024', '25-Mar-2024', '29-Mar-2024',
+    '11-Apr-2024', '17-Apr-2024', '01-May-2024', '20-May-2024', '17-Jun-2024',
+    '17-Jul-2024', '15-Aug-2024', '02-Oct-2024', '01-Nov-2024', '15-Nov-2024', '25-Dec-2024'
+].map(dateStr => new Date(dateStr.split('-').reverse().join('-'))); // Convert to Date objects
 
-// Fetch holiday data
-function fetchHolidayData() {
-    return fetch('holidays.json')
-        .then(response => response.json())
-        .then(data => {
-            holidays = data.map(dateStr => new Date(dateStr.split('-').reverse().join('-')));
-        });
-}
+// New stock data structure
+const stockData = {
+    "Dates": [
+        {
+            "PostDate": "01-01-2024",
+            "StockNames": ["NESTLEIND", "ITC"],
+            "PostDateNext": "02-01-2024"
+        },
+        {
+            "PostDate": "14-08-2024",
+            "StockNames": ["IOC", "ONGC"],
+            "PostDateNext": "16-08-2024"
+        }
+    ]
+};
 
-// Fetch stock data
-function fetchStockData() {
-    return fetch('stockData.json')
-        .then(response => response.json())
-        .then(data => {
-            stockData = data.Dates.reduce((acc, entry) => {
-                acc[entry.PostDate] = {
-                    stockNames: entry.StockNames.length > 0 ? entry.StockNames.join(', ') : 'N/A',
-                    nextPostDate: entry.PostDateNext || 'N/A'
-                };
-                return acc;
-            }, {});
-        });
-}
-
-// Initialize calendar rendering and fetch data
-document.addEventListener('DOMContentLoaded', () => {
-    Promise.all([fetchHolidayData(), fetchStockData()]).then(() => {
-        renderCalendar();
-        makeDatesClickable();
+// Convert stock data to a more accessible format
+function parseStockData() {
+    const parsedData = {};
+    stockData.Dates.forEach(entry => {
+        parsedData[entry.PostDate] = {
+            stockNames: entry.StockNames.join(', '),
+            nextPostDate: entry.PostDateNext
+        };
     });
-});
+    return parsedData;
+}
+
+const parsedStockData = parseStockData();
 
 function generateCalendar(month, year) {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -63,7 +65,7 @@ function generateCalendar(month, year) {
             className = 'sunday';
         }
 
-        const formattedDate = formatDate(dateObj);
+        const formattedDate = `${day.toString().padStart(2, '0')}-${(month + 1).toString().padStart(2, '0')}-${year}`;
         calendar += `<div class="${className}" data-date="${formattedDate}">${day}</div>`;
     }
 
@@ -80,8 +82,10 @@ function renderCalendar() {
     }
 
     calendarContainer.innerHTML = calendarHTML;
+    makeDatesClickable();
 }
 
+// Making dates clickable
 function makeDatesClickable() {
     const dates = document.querySelectorAll('.days div');
     dates.forEach(date => {
@@ -99,8 +103,7 @@ function searchData(event) {
     if (event) event.preventDefault(); // Prevent form submission
 
     const selectedDate = document.getElementById('dateInput').value;
-    const formattedDate = formatDateForDisplay(new Date(selectedDate));
-    const stockInfo = stockData[formattedDate] || { stockNames: 'N/A', nextPostDate: 'N/A' };
+    const stockInfo = parsedStockData[selectedDate] || { stockNames: 'N/A', nextPostDate: 'N/A' };
 
     // Logic for "Pre-Post Days" table
     const prePostDays = getPrePostDays(new Date(selectedDate));
@@ -119,7 +122,7 @@ function searchData(event) {
 
     // Display results
     displayPrePostDays('.result-search-1', prePostDays);
-    displayStockData('.result-search-2', stockInfo, formattedDate);
+    displayStockData('.result-search-2', stockInfo, selectedDate);
     displayMatchedDates('.result-search-3', bothMatched);
     displayMatchedDates('.result-search-4', satMatched);
     displayMatchedDates('.result-search-5', sunMatched);
@@ -174,11 +177,7 @@ function findNextWorkingDay(date, month) {
 }
 
 function formatDate(date) {
-    return `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()} (${date.toLocaleDateString('en-US', { weekday: 'short' })})`;
-}
-
-function formatDateForDisplay(date) {
-    return formatDate(date);
+    return `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
 }
 
 function getMatchingDates(day, weekday) {
@@ -210,6 +209,7 @@ function getSatMatchedDates(day) {
 }
 
 function getHollyDaysMatched(selectedDay) {
+    // Filter holidays to find those that match the selected day of the month
     const matchedHolidays = holidays.filter(holiday => {
         return holiday.getDate() === selectedDay;
     });
@@ -253,3 +253,6 @@ function displayStockData(selector, stockInfo, date) {
         container.innerHTML = `<div>Date: ${date}<br>Stock Names: ${stockInfo.stockNames}<br>Next Post Date: ${stockInfo.nextPostDate}</div>`;
     }
 }
+
+// Initialize calendar rendering
+document.addEventListener('DOMContentLoaded', renderCalendar);

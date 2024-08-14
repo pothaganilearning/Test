@@ -18,7 +18,7 @@ form {
 .Output-search, .Basic-Output {
     display: flex;
     flex-wrap: wrap;
-    justify-content: right-side;
+    justify-content: center;
     margin: 10px;
 }
 
