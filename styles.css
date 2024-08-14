@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 10px;
+}
+
+form {
+    font-family: Verdana, sans-serif;
+    font-size: 18px;
+}
+
+.calendar-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px;
+}
+
+.Output-search, .Basic-Output {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: right-side;
+    margin: 10px;
+}
+
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px;
+    padding: 5px;
+}
+
+.calendar {
+    width: 160px;
+    margin: 5px;
+    border: 1px solid #000;
+    padding: 5px;
+    text-align: center;
+}
+
+.output {
+    width: 160px;
+    margin: 5px;
+    border: 1px solid #000;
+    padding: 5px;
+    text-align: center;
+}
+
+.month {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.weekdays, .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.weekdays div, .days div {
+    padding: 3px;
+    text-align: center;
+}
+
+.holiday {
+    color: red;
+}
+
+.saturday {
+    color: red;
+}
+
+.sunday {
+    color: red;
+}
+
+/* Adjust for responsiveness */
+@media (max-width: 768px) {
+    .calendar, .output {
+        width: 100%;
+        margin: 5px;
+    }
+}

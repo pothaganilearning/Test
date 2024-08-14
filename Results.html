@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Results</h1>
+    
+    <h2>Stock Info</h2>
+    <table id="stockTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Stock Names</th>
+                <th>Next Post Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Stock data will be populated here -->
+        </tbody>
+    </table>
+    
+    <h2>Pre-Post Days</h2>
+    <div id="prePostDays"></div>
+    
+    <h2>Both Matched</h2>
+    <div id="bothMatched"></div>
+    
+    <h2>SAT Matched</h2>
+    <div id="satMatched"></div>
+    
+    <h2>Sun Matched</h2>
+    <div id="sunMatched"></div>
+    
+    <h2>Holly Days Matched</h2>
+    <div id="hollyDaysMatched"></div>
+    
+    <h2>Other Days Matched</h2>
+    <div id="otherDaysMatched"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get URL parameters
+            const params = new URLSearchParams(window.location.search);
+            
+            // Populate Stock Info
+            const date = params.get('date');
+            const stockNames = params.get('stockNames');
+            const nextPostDate = params.get('nextPostDate');
+            document.querySelector('#stockTable tbody').innerHTML = `
+                <tr>
+                    <td>${date}</td>
+                    <td>${stockNames}</td>
+                    <td>${nextPostDate}</td>
+                </tr>
+            `;
+
+            // Populate other tables
+            document.getElementById('prePostDays').innerHTML = JSON.parse(params.get('prePostDays')).map(day => `<div>${day.preDay} - ${day.postDay}</div>`).join('');
+            document.getElementById('bothMatched').innerHTML = JSON.parse(params.get('bothMatched')).map(date => `<div>${date}</div>`).join('');
+            document.getElementById('satMatched').innerHTML = JSON.parse(params.get('satMatched')).map(date => `<div>${date}</div>`).join('');
+            document.getElementById('sunMatched').innerHTML = JSON.parse(params.get('sunMatched')).map(date => `<div>${date}</div>`).join('');
+            document.getElementById('hollyDaysMatched').innerHTML = JSON.parse(params.get('hollyDaysMatched')).map(date => `<div>${date}</div>`).join('');
+            document.getElementById('otherDaysMatched').innerHTML = JSON.parse(params.get('otherDaysMatched')).map(date => `<div>${date}</div>`).join('');
+        });
+    </script>
+</body>
+</html>

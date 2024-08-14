@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2024 Calendar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="calendar-container" id="calendarContainer"></div>
+    <div class="filter-container" id="filterContainer">
+        <form id="dateForm" onsubmit="searchData(event)">
+            <label for="dateInput">Enter A Date or Select Date on calendar: </label>
+            <input type="date" id="dateInput" name="dateInput" />
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <div class="Basic-Output">
+        
+        <div class="output">
+            <h2>Stocks</h2>
+            <hr>
+            <div class="result-search result-search-2"></div>
+        </div>
+    </div>
+    <div class="Output-search">
+	
+		<div class="output">
+            <h2>Pre-Post Days</h2>
+            <hr>
+            <div class="result-search result-search-1"></div>
+        </div>
+		
+        <div class="output">
+            <h2>Both Matched</h2>
+            <hr>
+            <div class="result-search result-search-3"></div>
+        </div>
+        <div class="output">
+            <h2>SAT Matched</h2>
+            <hr>
+            <div class="result-search result-search-4"></div>
+        </div>
+        <div class="output">
+            <h2>Sun Matched</h2>
+            <hr>
+            <div class="result-search result-search-5"></div>
+        </div>
+        <div class="output">
+            <h2>Holly Days Matched</h2>
+            <hr>
+            <div class="result-search result-search-6"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
